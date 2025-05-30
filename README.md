@@ -3,7 +3,9 @@
 ## 1. Build Project
 
 ```tcl
-
+cd <your_project_folder>
+cd scripts
+source ./create_project.tcl
 
 ```
 
