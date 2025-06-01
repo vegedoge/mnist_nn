@@ -265,7 +265,7 @@ def main():
 
 
     flush_print("Step 3: Starting final training")
-    for epoch in range(1, 11):
+    for epoch in range(1, 31):
         tr_loss = train_one_epoch(model, train_loader, optimizer, criterion, device)
         flush_print(f"Epoch {epoch:2d} | Train Loss: {tr_loss:.4f}")
 
