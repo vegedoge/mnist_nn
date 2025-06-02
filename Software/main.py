@@ -44,6 +44,39 @@ def binarize_model_weights(model):
             bin_weight = weight.data.sign()
             weight.data.copy_(bin_weight)
 
+import struct
+import os
+
+class MNIST_IDX(torch.utils.data.Dataset):
+    def __init__(self, image_file, label_file, transform=None):
+        self.transform = transform
+        self.images = self.read_images(image_file)
+        self.labels = self.read_labels(label_file)
+
+    def read_images(self, image_file):
+        with open(image_file, 'rb') as f:
+            magic, num_images, rows, cols = struct.unpack(">IIII", f.read(16))
+            images = np.frombuffer(f.read(), dtype=np.uint8)
+            images = images.reshape(num_images, 1, rows, cols).astype(np.float32) / 255.0
+        return images
+
+    def read_labels(self, label_file):
+        with open(label_file, 'rb') as f:
+            magic, num_labels = struct.unpack(">II", f.read(8))
+            labels = np.frombuffer(f.read(), dtype=np.uint8)
+        return labels
+
+    def __len__(self):
+        return len(self.labels)
+
+    def __getitem__(self, idx):
+        image = torch.from_numpy(self.images[idx])
+        label = int(self.labels[idx])
+        if self.transform:
+            image = self.transform(image)
+        return image, label
+
+
 
 # ----------------------------
 # 1) Custom binary layers
@@ -228,16 +261,20 @@ def main():
     args = parser.parse_args()
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        NormalizeAndBinarize()
-    ])
-    full_train = datasets.MNIST('data', train=True, download=True, transform=transform)
-    test_set   = datasets.MNIST('data', train=False, transform=transform)
+    transform = NormalizeAndBinarize()
+
+    train_path = 'train-images.idx3-ubyte'
+    train_labels = 'train-labels.idx1-ubyte'
+    test_path = 't10k-images.idx3-ubyte'
+    test_labels = 't10k-labels.idx1-ubyte'
+
+    full_train = MNIST_IDX(train_path, train_labels, transform=transform)
+    test_set   = MNIST_IDX(test_path, test_labels, transform=transform)
+
 
     n = len(full_train)
-    n_train = int(0.80 * n)
-    n_val   = int(0.20 * n)
+    n_train = int(0.85 * n)
+    n_val   = int(0.15 * n)
     train_ds, val_ds, _ = random_split(full_train, [n_train, n_val, n - n_train - n_val])
     flush_print("Step 1: Data split into train/val/test")
 
