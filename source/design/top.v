@@ -40,7 +40,7 @@ wire valid_out_fc;
 conv_layer_1 conv_layer_1_inst (
     .clk(clk),
     .rst_n(rst_n),
-    .data_in(data_in),
+    .pixel_in(pixel_in),
     .conv1_out_1(conv1_out_1),
     .conv1_out_2(conv1_out_2),
     .conv1_out_3(conv1_out_3),
