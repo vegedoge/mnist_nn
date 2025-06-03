@@ -45,7 +45,7 @@ module conv1_tb();
     
     initial begin
         // generate the clock
-        clk = 0;
+        clk = 1;
         forever #5 clk = ~clk;
     end
     
@@ -63,9 +63,9 @@ module conv1_tb();
         rst_n = 1;
         
         // reset the system
-        #20;
+        #10;
         rst_n = 0;
-        #20;
+        #10;
         rst_n = 1;
         
         $display("Conv1 Layer Test Begin");

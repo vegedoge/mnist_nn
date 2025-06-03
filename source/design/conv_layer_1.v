@@ -40,8 +40,25 @@ conv1_buf #(
     .valid_out_buf(valid_out_buf)
 );
 
+//// only to buffer the input so as to eliminate the time issue
+//reg vb_d;
+//reg [8:0] pix_d;
+//always @(posedge clk or negedge rst_n) begin
+//    if (!rst_n) begin
+//        vb_d <= 1'b0;
+//        pix_d <= 9'b0;
+//    end else begin
+//        vb_d <= valid_out_buf;
+//        pix_d <= {pixel_0, pixel_1, pixel_2,
+//                  pixel_3, pixel_4, pixel_5,
+//                  pixel_6, pixel_7, pixel_8};
+//    end
+//end
+
 // convolution calculation
 conv1_calc_1 conv1_calc_1_inst (
+    .clk(clk),
+    .rst_n(rst_n),
     .valid_out_buf(valid_out_buf),
     .pixel_0(pixel_0), 
     .pixel_1(pixel_1), 
@@ -52,6 +69,16 @@ conv1_calc_1 conv1_calc_1_inst (
     .pixel_6(pixel_6), 
     .pixel_7(pixel_7), 
     .pixel_8(pixel_8),
+//    .valid_out_buf(vb_d),
+//    .pixel_0(pix_d[8]), 
+//    .pixel_1(pix_d[7]), 
+//    .pixel_2(pix_d[6]),
+//    .pixel_3(pix_d[5]), 
+//    .pixel_4(pix_d[4]), 
+//    .pixel_5(pix_d[3]),
+//    .pixel_6(pix_d[2]), 
+//    .pixel_7(pix_d[1]), 
+//    .pixel_8(pix_d[0]),
     .conv1_out_1(conv1_out_1), 
     .conv1_out_2(conv1_out_2), 
     .conv1_out_3(conv1_out_3), 
