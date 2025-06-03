@@ -118,12 +118,12 @@ class TinyBinCNN(nn.Module):
     def __init__(self):
         super().__init__()
         self.act = BinaryActivation.apply
-        self.conv1 = BinaryConv2d(1, 8, 3, padding=1)
+        self.conv1 = BinaryConv2d(1, 8, 3, padding=0)
         self.bn1   = nn.BatchNorm2d(8)
-        self.conv2 = BinaryConv2d(8, 16, 3, padding=1)
+        self.conv2 = BinaryConv2d(8, 16, 3, padding=0)
         self.bn2   = nn.BatchNorm2d(16)
         self.pool  = nn.MaxPool2d(2,2)
-        self.fc    = BinaryLinear(7*7*16, 10)
+        self.fc    = BinaryLinear(5*5*16, 10)
     def forward(self, x):
         x = self.act(self.bn1(self.conv1(x)))
         x = self.pool(x)
