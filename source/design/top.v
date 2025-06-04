@@ -56,6 +56,28 @@ conv_layer_1 conv_layer_1_inst (
 
 
 // convolution layer 2
+conv_layer_2 conv_layer2_inst (
+    .clk(clk),
+    .rst_n(rst_n),
+    .pixel_in(pixel_in),
+    .conv2_out_1(conv2_out_1),
+    .conv2_out_2(conv2_out_2),
+    .conv2_out_3(conv2_out_3),
+    .conv2_out_4(conv2_out_4),
+    .conv2_out_5(conv2_out_5),
+    .conv2_out_6(conv2_out_6),
+    .conv2_out_7(conv2_out_7),
+    .conv2_out_8(conv2_out_8),
+    .conv2_out_9(conv2_out_9),
+    .conv2_out_10(conv2_out_10),
+    .conv2_out_11(conv2_out_11),
+    .conv2_out_12(conv2_out_12),
+    .conv2_out_13(conv2_out_13),
+    .conv2_out_14(conv2_out_14),
+    .conv2_out_15(conv2_out_15),
+    .conv2_out_16(conv2_out_16),
+    .valid_out_conv2(valid_out_conv2)
+);
 
 
 // maxpooling layer 2

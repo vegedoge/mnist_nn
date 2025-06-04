@@ -1,7 +1,7 @@
 module conv1_calc_1(
     input clk,
     input rst_n,
-    input valid_out_buf,
+    input valid_in_buf,
     input pixel_0, pixel_1, pixel_2,
         pixel_3, pixel_4, pixel_5,
         pixel_6, pixel_7, pixel_8,
@@ -118,7 +118,7 @@ module conv1_calc_1(
             conv1_out_8 <= 1'b0;
             valid_out_conv1 <= 1'b0;
         end else begin
-            if (valid_out_buf) begin
+            if (valid_in_buf) begin
                 conv1_out_1 <= (cnt1 >= 4'd5) ? 1'b1 : 1'b0;
                 conv1_out_2 <= (cnt2 >= 4'd5) ? 1'b1 : 1'b0;
                 conv1_out_3 <= (cnt3 >= 4'd5) ? 1'b1 : 1'b0;

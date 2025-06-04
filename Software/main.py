@@ -263,14 +263,15 @@ def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     transform = NormalizeAndBinarize()
 
-    train_path = 'train-images.idx3-ubyte'
-    train_labels = 'train-labels.idx1-ubyte'
-    test_path = 't10k-images.idx3-ubyte'
-    test_labels = 't10k-labels.idx1-ubyte'
+    # train_path = 'train-images.idx3-ubyte'
+    # train_labels = 'train-labels.idx1-ubyte'
+    # test_path = 't10k-images.idx3-ubyte'
+    # test_labels = 't10k-labels.idx1-ubyte'
 
-    full_train = MNIST_IDX(train_path, train_labels, transform=transform)
-    test_set   = MNIST_IDX(test_path, test_labels, transform=transform)
-
+    # full_train = MNIST_IDX(train_path, train_labels, transform=transform)
+    # test_set   = MNIST_IDX(test_path, test_labels, transform=transform)
+    full_train = datasets.MNIST('data', train=True, download=True, transform=transform)
+    test_set   = datasets.MNIST('data', train=False, transform=transform)
 
     n = len(full_train)
     n_train = int(0.85 * n)
