@@ -50,8 +50,8 @@ module conv_layer_2 (
     wire [15:0] conv2_out_vec;
     
     conv2_calc_2 conv2_cal_inst (
-         .clk(clk),
-         .rst_n(rst_n),
+//         .clk(clk),
+//         .rst_n(rst_n),
          .valid_in_buf(valid_buf),
          .pixel_windows(pixel_windows),
          .conv2_out(conv2_out_vec),
