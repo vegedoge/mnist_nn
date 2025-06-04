@@ -22,6 +22,8 @@ module conv1_buf #(
     reg [X_BITS-1:0] y; // current pixel's coordination
     reg [1:0] buf_cnt; // current writing row for line buffer
     
+    reg valid_d;
+    
     integer i, j, idx_line;
     
     always @(posedge clk or negedge rst_n) begin
@@ -67,10 +69,24 @@ module conv1_buf #(
             
             if ((y >= KERNEL_SIZE - 1) && (x >= KERNEL_SIZE - 1)) begin
                 // output is valid only if y >= 2 && x >= 2
+//                valid_out_buf <= 1'b1;
+                valid_d <= 1'b1;
+//                pixel_0 <= window[0][0]; pixel_1 <= window[0][1]; pixel_2 <= window[0][2];
+//                pixel_3 <= window[1][0]; pixel_4 <= window[1][1]; pixel_5 <= window[1][2];
+//                pixel_6 <= window[2][0]; pixel_7 <= window[2][1]; pixel_8 <= window[2][2];
+            end else begin
+//                valid_out_buf <= 1'b0;
+                valid_d <= 1'b0;                
+//                pixel_0 <= 0; pixel_1 <= 0; pixel_2 <= 0; 
+//                pixel_3 <= 0; pixel_4 <= 0; pixel_5 <= 0; 
+//                pixel_6 <= 0; pixel_7 <= 0; pixel_8 <= 0; 
+            end
+            
+            if (valid_d) begin
                 valid_out_buf <= 1'b1;
                 pixel_0 <= window[0][0]; pixel_1 <= window[0][1]; pixel_2 <= window[0][2];
                 pixel_3 <= window[1][0]; pixel_4 <= window[1][1]; pixel_5 <= window[1][2];
-                pixel_6 <= window[2][0]; pixel_7 <= window[2][1]; pixel_8 <= window[2][2];
+                pixel_6 <= window[2][0]; pixel_7 <= window[2][1]; pixel_8 <= window[2][2];            
             end else begin
                 valid_out_buf <= 1'b0;
                 pixel_0 <= 0; pixel_1 <= 0; pixel_2 <= 0; 

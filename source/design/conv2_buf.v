@@ -5,8 +5,10 @@ module conv2_buf #(
     input clk,
     input rst_n,
     input [7:0] pixel_in,
-    output reg [71:0] pixel_windows,
-    output reg valid_out_buf
+    output [71:0] pixel_windows,
+    output valid_out_buf
+//    output reg [71:0] pixel_windows,
+//    output reg valid_out_buf
 );
     localparam KERNEL_SIZE = 3;
     localparam NUM_CHANNELS = 8;
@@ -39,15 +41,28 @@ module conv2_buf #(
         end
     endgenerate 
     
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin 
-            pixel_windows <= 72'b0;
-            valid_out_buf <= 1'b0;
-        end else begin
-            valid_out_buf <= ch_valid[0];
-            for (j = 0; j < NUM_CHANNELS; j = j + 1) begin
-                pixel_windows[j * 9 +: 9] <= ch_windows[j];
-            end
-        end
-    end
+    assign pixel_windows = {
+        ch_windows[7],
+        ch_windows[6],
+        ch_windows[5],
+        ch_windows[4],
+        ch_windows[3],
+        ch_windows[2],
+        ch_windows[1],
+        ch_windows[0]
+    };
+    
+    assign valid_out_buf = &ch_valid;
+    
+//    always @(posedge clk or negedge rst_n) begin
+//        if (!rst_n) begin 
+//            pixel_windows <= 72'b0;
+//            valid_out_buf <= 1'b0;
+//        end else begin
+//            valid_out_buf <= ch_valid[0];
+//            for (j = 0; j < NUM_CHANNELS; j = j + 1) begin
+//                pixel_windows[j * 9 +: 9] <= ch_windows[j];
+//            end
+//        end
+//    end
 endmodule

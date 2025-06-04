@@ -57,8 +57,8 @@ conv1_buf #(
 
 // convolution calculation
 conv1_calc_1 conv1_calc_1_inst (
-    .clk(clk),
-    .rst_n(rst_n),
+//    .clk(clk),
+//    .rst_n(rst_n),
     .valid_in_buf(valid_buf),
     .pixel_0(pixel_0), 
     .pixel_1(pixel_1), 

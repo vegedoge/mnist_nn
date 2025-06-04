@@ -1,6 +1,6 @@
 module conv1_calc_1(
-    input clk,
-    input rst_n,
+//    input clk,
+//    input rst_n,
     input valid_in_buf,
     input pixel_0, pixel_1, pixel_2,
         pixel_3, pixel_4, pixel_5,
@@ -83,62 +83,62 @@ module conv1_calc_1(
     wire [3:0] cnt7 = popcount9(xnor7);
     wire [3:0] cnt8 = popcount9(xnor8);
     
-//    always @(*) begin
-//        if (valid_out_buf) begin
-//            conv1_out_1 = (cnt1 >= 4'd5) ? 1'b1 : 1'b0;
-//            conv1_out_2 = (cnt2 >= 4'd5) ? 1'b1 : 1'b0;
-//            conv1_out_3 = (cnt3 >= 4'd5) ? 1'b1 : 1'b0;
-//            conv1_out_4 = (cnt4 >= 4'd5) ? 1'b1 : 1'b0;
-//            conv1_out_5 = (cnt5 >= 4'd5) ? 1'b1 : 1'b0;
-//            conv1_out_6 = (cnt6 >= 4'd5) ? 1'b1 : 1'b0;
-//            conv1_out_7 = (cnt7 >= 4'd5) ? 1'b1 : 1'b0;
-//            conv1_out_8 = (cnt8 >= 4'd5) ? 1'b1 : 1'b0;
-//            valid_out_conv1 = 1'b1;
-//        end else begin
-//            conv1_out_1 = 1'b0;
-//            conv1_out_2 = 1'b0;
-//            conv1_out_3 = 1'b0;
-//            conv1_out_4 = 1'b0;
-//            conv1_out_5 = 1'b0;
-//            conv1_out_6 = 1'b0;
-//            conv1_out_7 = 1'b0;
-//            conv1_out_8 = 1'b0;
-//            valid_out_conv1 = 1'b0;
-//        end
-//    end
-    always @(posedge clk or negedge rst_n) begin 
-        if (!rst_n) begin
-            conv1_out_1 <= 1'b0;
-            conv1_out_2 <= 1'b0;
-            conv1_out_3 <= 1'b0;
-            conv1_out_4 <= 1'b0;
-            conv1_out_5 <= 1'b0;
-            conv1_out_6 <= 1'b0;
-            conv1_out_7 <= 1'b0;
-            conv1_out_8 <= 1'b0;
-            valid_out_conv1 <= 1'b0;
+    always @(*) begin
+        if (valid_in_buf) begin
+            conv1_out_1 = (cnt1 >= 4'd5) ? 1'b1 : 1'b0;
+            conv1_out_2 = (cnt2 >= 4'd5) ? 1'b1 : 1'b0;
+            conv1_out_3 = (cnt3 >= 4'd5) ? 1'b1 : 1'b0;
+            conv1_out_4 = (cnt4 >= 4'd5) ? 1'b1 : 1'b0;
+            conv1_out_5 = (cnt5 >= 4'd5) ? 1'b1 : 1'b0;
+            conv1_out_6 = (cnt6 >= 4'd5) ? 1'b1 : 1'b0;
+            conv1_out_7 = (cnt7 >= 4'd5) ? 1'b1 : 1'b0;
+            conv1_out_8 = (cnt8 >= 4'd5) ? 1'b1 : 1'b0;
+            valid_out_conv1 = 1'b1;
         end else begin
-            if (valid_in_buf) begin
-                conv1_out_1 <= (cnt1 >= 4'd5) ? 1'b1 : 1'b0;
-                conv1_out_2 <= (cnt2 >= 4'd5) ? 1'b1 : 1'b0;
-                conv1_out_3 <= (cnt3 >= 4'd5) ? 1'b1 : 1'b0;
-                conv1_out_4 <= (cnt4 >= 4'd5) ? 1'b1 : 1'b0;
-                conv1_out_5 <= (cnt5 >= 4'd5) ? 1'b1 : 1'b0;
-                conv1_out_6 <= (cnt6 >= 4'd5) ? 1'b1 : 1'b0;
-                conv1_out_7 <= (cnt7 >= 4'd5) ? 1'b1 : 1'b0;
-                conv1_out_8 <= (cnt8 >= 4'd5) ? 1'b1 : 1'b0;
-                valid_out_conv1 <= 1'b1;
-            end else begin
-                conv1_out_1 <= 1'b0;
-                conv1_out_2 <= 1'b0;
-                conv1_out_3 <= 1'b0;
-                conv1_out_4 <= 1'b0;
-                conv1_out_5 <= 1'b0;
-                conv1_out_6 <= 1'b0;
-                conv1_out_7 <= 1'b0;
-                conv1_out_8 <= 1'b0;
-                valid_out_conv1 <= 1'b0;
-            end
+            conv1_out_1 = 1'b0;
+            conv1_out_2 = 1'b0;
+            conv1_out_3 = 1'b0;
+            conv1_out_4 = 1'b0;
+            conv1_out_5 = 1'b0;
+            conv1_out_6 = 1'b0;
+            conv1_out_7 = 1'b0;
+            conv1_out_8 = 1'b0;
+            valid_out_conv1 = 1'b0;
         end
     end
+//    always @(posedge clk or negedge rst_n) begin 
+//        if (!rst_n) begin
+//            conv1_out_1 <= 1'b0;
+//            conv1_out_2 <= 1'b0;
+//            conv1_out_3 <= 1'b0;
+//            conv1_out_4 <= 1'b0;
+//            conv1_out_5 <= 1'b0;
+//            conv1_out_6 <= 1'b0;
+//            conv1_out_7 <= 1'b0;
+//            conv1_out_8 <= 1'b0;
+//            valid_out_conv1 <= 1'b0;
+//        end else begin
+//            if (valid_in_buf) begin
+//                conv1_out_1 <= (cnt1 >= 4'd5) ? 1'b1 : 1'b0;
+//                conv1_out_2 <= (cnt2 >= 4'd5) ? 1'b1 : 1'b0;
+//                conv1_out_3 <= (cnt3 >= 4'd5) ? 1'b1 : 1'b0;
+//                conv1_out_4 <= (cnt4 >= 4'd5) ? 1'b1 : 1'b0;
+//                conv1_out_5 <= (cnt5 >= 4'd5) ? 1'b1 : 1'b0;
+//                conv1_out_6 <= (cnt6 >= 4'd5) ? 1'b1 : 1'b0;
+//                conv1_out_7 <= (cnt7 >= 4'd5) ? 1'b1 : 1'b0;
+//                conv1_out_8 <= (cnt8 >= 4'd5) ? 1'b1 : 1'b0;
+//                valid_out_conv1 <= 1'b1;
+//            end else begin
+//                conv1_out_1 <= 1'b0;
+//                conv1_out_2 <= 1'b0;
+//                conv1_out_3 <= 1'b0;
+//                conv1_out_4 <= 1'b0;
+//                conv1_out_5 <= 1'b0;
+//                conv1_out_6 <= 1'b0;
+//                conv1_out_7 <= 1'b0;
+//                conv1_out_8 <= 1'b0;
+//                valid_out_conv1 <= 1'b0;
+//            end
+//        end
+//    end
 endmodule
