@@ -4,6 +4,7 @@ module conv1_buf #(
 ) (
     input clk,
     input rst_n,
+    input valid_in,
     input pixel_in,  // 1-bit input data
     output reg pixel_0, pixel_1, pixel_2,
     pixel_3, pixel_4, pixel_5,
@@ -46,67 +47,75 @@ module conv1_buf #(
                 end
             end
         end else begin
-            linebuf[buf_cnt][x] <= pixel_in; // write to line buffer
-            
-            for (i = 0; i < KERNEL_SIZE; i = i + 1) begin
-                for (j = 0; j < KERNEL_SIZE; j = j + 1) begin
-                    window[i][j] <= window[i][j+1]; // left shift the window
-                end
-            end
-            
-            for (i = 0; i < KERNEL_SIZE; i = i + 1) begin
-                // fill the last col for each row of the window
-                // not directly using % since it needs much resources in synthesis
-                idx_line = buf_cnt + i + 1;
-                if (idx_line >= KERNEL_SIZE) idx_line = idx_line - KERNEL_SIZE;
+            if (valid_in) begin
+                linebuf[buf_cnt][x] <= pixel_in; // write to line buffer
                 
-                if (idx_line == buf_cnt) begin
-                    window[i][KERNEL_SIZE-1] <= pixel_in;
-                end else begin
-                    window[i][KERNEL_SIZE-1] <= linebuf[idx_line][x];
+                for (i = 0; i < KERNEL_SIZE; i = i + 1) begin
+                    for (j = 0; j < KERNEL_SIZE; j = j + 1) begin
+                        window[i][j] <= window[i][j+1]; // left shift the window
+                    end
                 end
-            end
-            
-            if ((y >= KERNEL_SIZE - 1) && (x >= KERNEL_SIZE - 1)) begin
-                // output is valid only if y >= 2 && x >= 2
-//                valid_out_buf <= 1'b1;
-                valid_d <= 1'b1;
-//                pixel_0 <= window[0][0]; pixel_1 <= window[0][1]; pixel_2 <= window[0][2];
-//                pixel_3 <= window[1][0]; pixel_4 <= window[1][1]; pixel_5 <= window[1][2];
-//                pixel_6 <= window[2][0]; pixel_7 <= window[2][1]; pixel_8 <= window[2][2];
+                
+                for (i = 0; i < KERNEL_SIZE; i = i + 1) begin
+                    // fill the last col for each row of the window
+                    // not directly using % since it needs much resources in synthesis
+                    idx_line = buf_cnt + i + 1;
+                    if (idx_line >= KERNEL_SIZE) idx_line = idx_line - KERNEL_SIZE;
+                    
+                    if (idx_line == buf_cnt) begin
+                        window[i][KERNEL_SIZE-1] <= pixel_in;
+                    end else begin
+                        window[i][KERNEL_SIZE-1] <= linebuf[idx_line][x];
+                    end
+                end
+                
+                if ((y >= KERNEL_SIZE - 1) && (x >= KERNEL_SIZE - 1)) begin
+                    // output is valid only if y >= 2 && x >= 2
+    //                valid_out_buf <= 1'b1;
+                    valid_d <= 1'b1;
+    //                pixel_0 <= window[0][0]; pixel_1 <= window[0][1]; pixel_2 <= window[0][2];
+    //                pixel_3 <= window[1][0]; pixel_4 <= window[1][1]; pixel_5 <= window[1][2];
+    //                pixel_6 <= window[2][0]; pixel_7 <= window[2][1]; pixel_8 <= window[2][2];
+                end else begin
+    //                valid_out_buf <= 1'b0;
+                    valid_d <= 1'b0;                
+    //                pixel_0 <= 0; pixel_1 <= 0; pixel_2 <= 0; 
+    //                pixel_3 <= 0; pixel_4 <= 0; pixel_5 <= 0; 
+    //                pixel_6 <= 0; pixel_7 <= 0; pixel_8 <= 0; 
+                end
+                
+                if (valid_d) begin
+                    valid_out_buf <= 1'b1;
+                    pixel_0 <= window[0][0]; pixel_1 <= window[0][1]; pixel_2 <= window[0][2];
+                    pixel_3 <= window[1][0]; pixel_4 <= window[1][1]; pixel_5 <= window[1][2];
+                    pixel_6 <= window[2][0]; pixel_7 <= window[2][1]; pixel_8 <= window[2][2];            
+                end else begin
+                    valid_out_buf <= 1'b0;
+                    pixel_0 <= 0; pixel_1 <= 0; pixel_2 <= 0; 
+                    pixel_3 <= 0; pixel_4 <= 0; pixel_5 <= 0; 
+                    pixel_6 <= 0; pixel_7 <= 0; pixel_8 <= 0; 
+                end
+                
+                if (x == WIDTH - 1) begin
+                    // achieve the border, reset x, y
+                    x <= 0;
+                    if (y == HEIGHT - 1) begin
+                        y <= 0;
+                    end else begin
+                        y <= y + 1;
+                    end
+                    buf_cnt <= buf_cnt + 1;
+                    if (buf_cnt >= KERNEL_SIZE) buf_cnt <= 0; // (buf_cnt + 1) % 3
+                
+                end else begin
+                    x <= x + 1;
+                end
             end else begin
-//                valid_out_buf <= 1'b0;
-                valid_d <= 1'b0;                
-//                pixel_0 <= 0; pixel_1 <= 0; pixel_2 <= 0; 
-//                pixel_3 <= 0; pixel_4 <= 0; pixel_5 <= 0; 
-//                pixel_6 <= 0; pixel_7 <= 0; pixel_8 <= 0; 
-            end
-            
-            if (valid_d) begin
-                valid_out_buf <= 1'b1;
-                pixel_0 <= window[0][0]; pixel_1 <= window[0][1]; pixel_2 <= window[0][2];
-                pixel_3 <= window[1][0]; pixel_4 <= window[1][1]; pixel_5 <= window[1][2];
-                pixel_6 <= window[2][0]; pixel_7 <= window[2][1]; pixel_8 <= window[2][2];            
-            end else begin
+                // if valid_in is low, reset the output
                 valid_out_buf <= 1'b0;
                 pixel_0 <= 0; pixel_1 <= 0; pixel_2 <= 0; 
                 pixel_3 <= 0; pixel_4 <= 0; pixel_5 <= 0; 
                 pixel_6 <= 0; pixel_7 <= 0; pixel_8 <= 0; 
-            end
-            
-            if (x == WIDTH - 1) begin
-                // achieve the border, reset x, y
-                x <= 0;
-                if (y == HEIGHT - 1) begin
-                    y <= 0;
-                end else begin
-                    y <= y + 1;
-                end
-                buf_cnt <= buf_cnt + 1;
-                if (buf_cnt >= KERNEL_SIZE) buf_cnt <= 0; // (buf_cnt + 1) % 3
-            
-            end else begin
-                x <= x + 1;
             end
         end
     end 

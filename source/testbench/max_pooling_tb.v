@@ -8,6 +8,7 @@ module max_pooling_tb();
     max_pooling #(5, 5) maxPool (
         .clk(clk),
         .rst_n(rst_n),
+        .valid_in(1'b1), // assuming valid_in is always high for this test
         .pixel_in(pixel_in),
         .maxpool_out(maxpool_out),
         .valid_out_maxpool(valid_out_maxpool)

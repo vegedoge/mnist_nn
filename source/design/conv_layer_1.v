@@ -27,6 +27,7 @@ conv1_buf #(
 ) conv1_buf_inst (
     .clk(clk),
     .rst_n(rst_n),
+    .valid_in(1'b1), // always valid in this case
     .pixel_in(pixel_in),
     .pixel_0(pixel_0),
     .pixel_1(pixel_1),

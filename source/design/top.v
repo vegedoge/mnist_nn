@@ -65,6 +65,7 @@ max_pooling_layer_1 #(
 ) max_pooling_layer_1_inst (
     .clk(clk),
     .rst_n(rst_n),
+    .valid_in(valid_out_conv1),
     .pixel_in_1(conv1_out_1),
     .pixel_in_2(conv1_out_2),
     .pixel_in_3(conv1_out_3),
@@ -90,6 +91,7 @@ max_pooling_layer_1 #(
 conv_layer_2 conv_layer2_inst (
     .clk(clk),
     .rst_n(rst_n),
+    .valid_in(valid_out_maxpool1),
     .pixel_in_1(maxpool1_out_1),
     .pixel_in_2(maxpool1_out_2),
     .pixel_in_3(maxpool1_out_3),
@@ -126,6 +128,7 @@ max_pooling_layer_2 #(
 ) max_pooling_layer_2_inst (
     .clk(clk),
     .rst_n(rst_n),
+    .valid_in(valid_out_conv2),
     .pixel_in_1(conv2_out_1),
     .pixel_in_2(conv2_out_2),
     .pixel_in_3(conv2_out_3),

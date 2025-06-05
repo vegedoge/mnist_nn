@@ -35,6 +35,7 @@ module conv2_buf_tb();
     ) conv2_buf_test (
         .clk(clk),
         .rst_n(rst_n),
+        .valid_in(1'b1), // Always valid for testing
         .pixel_in(pixel_in),
         .pixel_windows(pixel_windows),
         .valid_out_buf(valid_out_buf)

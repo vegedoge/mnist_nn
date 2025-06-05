@@ -4,6 +4,7 @@ module conv2_buf #(
 ) (
     input clk,
     input rst_n,
+    input valid_in,
     input [7:0] pixel_in,
 //    output [71:0] pixel_windows,
 //    output valid_out_buf
@@ -26,6 +27,7 @@ module conv2_buf #(
             ) ch_buf_inst (
               .clk(clk),
               .rst_n(rst_n),
+              .valid_in(valid_in),
               .pixel_in(pixel_in[i]),
               .pixel_0(ch_windows[i][0]),
               .pixel_1(ch_windows[i][1]),  

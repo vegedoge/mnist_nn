@@ -54,6 +54,7 @@ module conv2_tb();
     conv_layer_2 conv2_layer_test (
         .clk(clk),
         .rst_n(rst_n),
+        .valid_in(1'b1), // Always valid for testing
         .pixel_in_1(pixel_in_1),
         .pixel_in_2(pixel_in_2),
         .pixel_in_3(pixel_in_3),

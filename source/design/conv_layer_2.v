@@ -1,6 +1,7 @@
 module conv_layer_2 (
     input wire clk,
     input wire rst_n,
+    input wire valid_in,            // signal to indicate valid input
     input wire pixel_in_1,         // 1-bit input data channel 1
     input wire pixel_in_2,         // 1-bit input data channel 2
     input wire pixel_in_3,         // 1-bit input data
@@ -41,6 +42,7 @@ module conv_layer_2 (
     ) conv2_buf_inst (
         .clk(clk),
         .rst_n(rst_n),
+        .valid_in(valid_in), // always valid in this case
         .pixel_in(pixel_in),
         .pixel_windows(pixel_windows),
         .valid_out_buf(valid_buf)

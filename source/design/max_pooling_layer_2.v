@@ -4,6 +4,7 @@ module max_pooling_layer_2 #(
 ) (
     input clk, 
     input rst_n,
+    input valid_in,
     input pixel_in_1, pixel_in_2, pixel_in_3, pixel_in_4,
           pixel_in_5, pixel_in_6, pixel_in_7, pixel_in_8,
           pixel_in_9, pixel_in_10, pixel_in_11, pixel_in_12,
@@ -45,6 +46,7 @@ generate
         ) max_pooling_buf_inst (
             .clk(clk),
             .rst_n(rst_n),
+            .valid_in(valid_in),
             .pixel_in(pixel_in[i]),
             .pixel_0(pixel_0[i]),
             .pixel_1(pixel_1[i]),
