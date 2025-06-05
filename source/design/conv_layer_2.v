@@ -74,7 +74,7 @@ module conv_layer_2 (
      assign conv2_out_14 = conv2_out_vec[13];
      assign conv2_out_15 = conv2_out_vec[14];
      assign conv2_out_16 = conv2_out_vec[15];
-
+endmodule
 //// === Channel 1 ===//
 //// input pixel buffer for 3x3 conv
 //wire pixel_1_0, pixel_1_1, pixel_1_2,
@@ -135,4 +135,3 @@ module conv_layer_2 (
 //    .valid_out_conv2(valid_out_conv2)
 //);
 //// === Channel 1 ===//
-endmodule

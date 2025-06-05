@@ -86,7 +86,7 @@ module conv2_tb();
         forever #10 clk = ~clk;
     end
     
-    integer cycle_cnt;
+    integer cycle_cnt, i, j;
     
     initial begin
         rst_n = 1'b1;
@@ -106,40 +106,54 @@ module conv2_tb();
         rst_n = 1'b1;
 //        #10;
         
-        forever begin
-            @(posedge clk);
-            cycle_cnt = cycle_cnt + 1;
-            
-            pixel_in_1 = cycle_cnt[0]; // each bit drives one channel pixels
-            pixel_in_2 = cycle_cnt[1];
-            pixel_in_3 = cycle_cnt[2];
-            pixel_in_4 = cycle_cnt[3];
-            pixel_in_5 = cycle_cnt[4];
-            pixel_in_6 = cycle_cnt[5];
-            pixel_in_7 = cycle_cnt[6];
-            pixel_in_8 = cycle_cnt[7];
-            
-            // When valid_out_conv2 goes high, display the 16‐bit output vector
-            if (valid_out_conv2) begin
-                $display("[%0t] valid_out_conv2=1, conv2_out = %b%b%b%b%b%b%b%b%b%b%b%b%b%b%b%b",
-                         $time,
-                         conv2_out_16, conv2_out_15, conv2_out_14, conv2_out_13,
-                         conv2_out_12, conv2_out_11, conv2_out_10, conv2_out_9,
-                         conv2_out_8,  conv2_out_7,  conv2_out_6,  conv2_out_5,
-                         conv2_out_4,  conv2_out_3,  conv2_out_2,  conv2_out_1);
-            end
-
-            // End simulation after 1000 cycles
-            if (cycle_cnt == 1000) begin
-                $display("Simulation finished after %0d cycles.", cycle_cnt);
+        for (i = 0; i < 13; i = i + 1) begin
+            for (j = 0; j < 13; j = j + 1) begin
+                cycle_cnt = cycle_cnt + 1;
+                {pixel_in_8, pixel_in_7, pixel_in_6, pixel_in_5, pixel_in_4, pixel_in_3, pixel_in_2, pixel_in_1} = cycle_cnt[7:0];
                 #20;
-                $finish;
             end
-            
         end
         
+        
+        #20;
+//     End simulation after 1000 cycles
+        if (cycle_cnt == 168) begin
+            $display("Simulation finished after %0d cycles.", cycle_cnt);
+            #20;
+            $finish;
+        end 
+        
+        
+//        forever begin
+//            @(posedge clk);
+//            cycle_cnt = cycle_cnt + 1;
+//            {pixel_in_8, pixel_in_7, pixel_in_6, pixel_in_5, pixel_in_4, pixel_in_3, pixel_in_2, pixel_in_1} = cycle_cnt[7:0];
+            
+////            pixel_in_1 <= cycle_cnt[0]; // each bit drives one channel pixels
+////            pixel_in_2 <= cycle_cnt[1];
+////            pixel_in_3 <= cycle_cnt[2];
+////            pixel_in_4 <= cycle_cnt[3];
+////            pixel_in_5 <= cycle_cnt[4];
+////            pixel_in_6 <= cycle_cnt[5];
+////            pixel_in_7 <= cycle_cnt[6];
+////            pixel_in_8 <= cycle_cnt[7];
+            
+//            // When valid_out_conv2 goes high, display the 16‐bit output vector
+//            if (valid_out_conv2) begin
+//                $display("[%0t] valid_out_conv2=1, conv2_out = %b%b%b%b%b%b%b%b%b%b%b%b%b%b%b%b",
+//                         $time,
+//                         conv2_out_16, conv2_out_15, conv2_out_14, conv2_out_13,
+//                         conv2_out_12, conv2_out_11, conv2_out_10, conv2_out_9,
+//                         conv2_out_8,  conv2_out_7,  conv2_out_6,  conv2_out_5,
+//                         conv2_out_4,  conv2_out_3,  conv2_out_2,  conv2_out_1);
+//            end
+
+//            // End simulation after 1000 cycles
+//            if (cycle_cnt == 1000) begin
+//                $display("Simulation finished after %0d cycles.", cycle_cnt);
+//                #20;
+//                $finish;
+//            end 
+//        end
     end
-    
-
-
 endmodule

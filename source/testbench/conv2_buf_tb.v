@@ -82,7 +82,4 @@ module conv2_buf_tb();
         $finish;
         
     end
-    
-    
-    
 endmodule
