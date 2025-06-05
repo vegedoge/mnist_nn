@@ -1,4 +1,4 @@
-module fully_connected #(
+module fc_layer #(
     parameter INPUT_NUM = 400, 
     parameter OUTPUT_NUM = 10
 ) (
@@ -140,15 +140,15 @@ module fully_connected #(
                 
                 1'b1: begin
                     fc_out_1 <= cnt1;
-                    fc_out_2 <= cnt1;
-                    fc_out_3 <= cnt1;
-                    fc_out_4 <= cnt1;
-                    fc_out_5 <= cnt1;
-                    fc_out_6 <= cnt1;
-                    fc_out_7 <= cnt1;
-                    fc_out_8 <= cnt1;
-                    fc_out_9 <= cnt1;
-                    fc_out_10 <= cnt1;
+                    fc_out_2 <= cnt2;
+                    fc_out_3 <= cnt3;
+                    fc_out_4 <= cnt4;
+                    fc_out_5 <= cnt5;
+                    fc_out_6 <= cnt6;
+                    fc_out_7 <= cnt7;
+                    fc_out_8 <= cnt8;
+                    fc_out_9 <= cnt9;
+                    fc_out_10 <= cnt10;
                     
                     valid_out_fc <= 1'b1;
                     

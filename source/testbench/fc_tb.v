@@ -42,7 +42,7 @@ module fc_tb();
     wire [8:0] fc_out_10;
     wire valid_out_fc;
     
-    fully_connected #(
+    fc_layer #(
         .INPUT_NUM(400),
         .OUTPUT_NUM(10)
     ) fc_test (

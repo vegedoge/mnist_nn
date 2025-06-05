@@ -38,7 +38,7 @@ assign valid_out_maxpool = &valid_out_maxpool_ch;
 
 genvar i;
 generate
-    for(i = 0; i < 15; i = i + 1) begin: max_pooling_channels
+    for(i = 0; i < 16; i = i + 1) begin: max_pooling_channels
         max_pooling_buf #(
             .WIDTH(WIDTH), 
             .HEIGHT(HEIGHT)
