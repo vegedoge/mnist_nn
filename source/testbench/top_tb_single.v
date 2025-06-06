@@ -28,7 +28,7 @@ module top_single_tb();
     end
 
     initial begin
-        $readmemb("../../../../../source/testbench/test_figures/test_7_7.txt", test_img);
+        $readmemb("../../../../../source/testbench/test_figures/test_7.txt", test_img);
         rst_n = 0;
         data_in = 0;
         valid_in = 0;
@@ -41,37 +41,40 @@ module top_single_tb();
         $finish;
     end
     
-    always @(*) begin
-        if (!rst_n) begin
-            data_in = 0;
-            valid_in = 0;
-            img_idx = 0;
-        end else begin
-            if (img_idx < 784) begin
-                data_in = test_img[img_idx];
-                valid_in = 1;
-                img_idx = img_idx + 1;
-            end else begin
-                data_in = 0; // Stop sending data after 784 bits
-                valid_in = 0;
-            end
-            #10;
-        end
-    end
+    // always @(*) begin
+    //     if (!rst_n) begin
+    //         data_in = 0;
+    //         valid_in = 0;
+    //         img_idx = 0;
+    //     end else begin
+    //         if (img_idx < 784) begin
+    //             data_in = test_img[img_idx];
+    //             valid_in = 1;
+    //             img_idx = img_idx + 1;
+    //         end else begin
+    //             data_in = 0; // Stop sending data after 784 bits
+    //             valid_in = 0;
+    //         end
+    //         #10;
+    //     end
+    // end
 
-//    always @(posedge clk) begin
-//        if (!rst_n) begin
-//            data_in = 0;
-//            img_idx = 0;
-//        end else begin
-//            if (img_idx < 784) begin
-//                data_in = test_img[img_idx];
-//                img_idx = img_idx + 1;
-//            end else begin
-//                data_in = 0; // Stop sending data after 784 bits
-//            end
-//        end
-//    end
+   always @(posedge clk) begin
+       if (!rst_n) begin
+           data_in = 0;
+           img_idx = 0;
+           valid_in = 0;
+       end else begin
+           if (img_idx < 784) begin
+               valid_in = 1;
+               data_in = test_img[img_idx];
+               img_idx = img_idx + 1;
+           end else begin
+               data_in = 0; // Stop sending data after 784 bits
+               valid_in = 0; // Stop valid signal
+           end
+       end
+   end
 
     always @(posedge clk) begin
         if (valid_out) begin

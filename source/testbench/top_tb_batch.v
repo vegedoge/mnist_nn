@@ -16,6 +16,9 @@ module top_tb_batch();
     reg [9:0] prediction_hit;
     reg [9:0] accuracy;
 
+
+    reg test_img_1[0:1567];
+    reg [0:3] test_labels_1[0:1];
     // Instantiate the top module
     top uut (
         .clk(clk),
@@ -43,6 +46,7 @@ module top_tb_batch();
         img_idx = 0;
         prediction_hit = 0;
         accuracy = 0;
+        state = 1'b0; // Initial state is not sending an image
         i = 0;
 
         #20;
@@ -53,91 +57,106 @@ module top_tb_batch();
         $finish;
     end
     
-    always @(*) begin
-        if (!rst_n) begin
-            data_in = 0;
-            img_idx = 0;
-            valid_in = 0;
-            i = 0;
-        end else begin
-            if (state == 1'b0) begin
-                data_in = test_img_set[i * 784 + img_idx]; // Stream the first image
-                valid_in = 1'b1;
-                img_idx = img_idx + 1;
+    // always @(*) begin
+    //     if (!rst_n) begin
+    //         data_in = 0;
+    //         img_idx = 0;
+    //         valid_in = 0;
+    //         i = 0;
+    //     end else begin
+    //         if (state == 1'b0) begin
+    //             data_in = test_img_set[i * 784 + img_idx]; // Stream the first image
+    //             valid_in = 1'b1;
+    //             img_idx = img_idx + 1;
 
-                if (img_idx >= 784) begin
-                    img_idx = 0; // Reset pixel index for the next image
-                    state = 1'b1; // Set state to indicate image is fully sent
-                    valid_in = 1'b1;
+    //             if (img_idx >= 784) begin
+    //                 img_idx = 0; // Reset pixel index for the next image
+    //                 state = 1'b1; // Set state to indicate image is fully sent
+    //                 valid_in = 1'b1;
 
-                    if (i >= 1000) begin
-                        // display final results
-                        data_in = 0; // Stop sending data
-                        valid_in = 1'b0; 
-                        accuracy = (prediction_hit * 100) / 1000; // Calculate accuracy
-                        $display("=== Test Completed ===");
-                        $display("Total Images: 1000, Correct Predictions: %0d, Accuracy: %0d%%", prediction_hit, accuracy);
-                        $finish;
-                    end
-                end
-            end
+    //                 if (i >= 1000) begin
+    //                     // display final results
+    //                     data_in = 0; // Stop sending data
+    //                     valid_in = 1'b0; 
+    //                     accuracy = (prediction_hit * 100) / 1000; // Calculate accuracy
+    //                     $display("=== Test Completed ===");
+    //                     $display("Total Images: 1000, Correct Predictions: %0d, Accuracy: %0d%%", prediction_hit, accuracy);
+    //                     $finish;
+    //                 end
+    //             end
+    //         end
             
-            if (valid_out) begin
-                if (prediction == test_labels[i]) begin
-                    prediction_hit = prediction_hit + 1;
-                    $display("Image %0d Prediction: %0d | Expected: %0d TRUE", i, prediction, test_labels[i]);
-                end else begin
-                    $display("Image %0d Prediction: %0d | Expected: %0d FALSE", i, prediction, test_labels[i]);
-                end
+    //         if (valid_out) begin
+    //             if (prediction == test_labels[i]) begin
+    //                 prediction_hit = prediction_hit + 1;
+    //                 $display("Image %0d Prediction: %0d | Expected: %0d TRUE", i, prediction, test_labels[i]);
+    //             end else begin
+    //                 $display("Image %0d Prediction: %0d | Expected: %0d FALSE", i, prediction, test_labels[i]);
+    //             end
 
-                state = 1'b0;
-                i = i + 1'b1;
+    //             state = 1'b0;
+    //             i = i + 1'b1;
+    //         end
+    //     end
+    // end
+    integer j, k;
+    initial begin
+        for (j = 0; j < 2; j = j + 1) begin
+            for (k = 0; k < 784; k = k + 1) begin
+                test_img_1[j * 784 + k] = 1;
             end
         end
+
+        test_labels_1[0] = 4'b0001; // Label for first image
+        test_labels_1[1] = 4'b0001; // Label for second image
     end
 
-//    always @(posedge clk) begin
-//        if (!rst_n) begin
-//            data_in <= 0;
-//            img_idx <= 0;
-//            valid_in <= 0;
-//            i <= 0;
-//        end else begin
-//            if (valid_out) begin
-//                if (prediction == test_labels[i]) begin
-//                    prediction_hit <= prediction_hit + 1;
-//                    $display("Image %0d Prediction: %0d | Expected: %0d TRUE", i, prediction, test_labels[i]);
-//                end else begin
-//                    $display("Image %0d Prediction: %0d | Expected: %0d FALSE", i, prediction, test_labels[i]);
-//                end
+   always @(posedge clk) begin
+       if (!rst_n) begin
+           data_in <= 0;
+           img_idx <= 0;
+           valid_in <= 0;
+           state <= 1'b0; // Reset state
+           i <= 0;
+       end else begin
+           if (valid_out) begin
+            //    if (prediction == test_labels[i]) begin
+               if (prediction == test_labels_1[i]) begin
+                   prediction_hit <= prediction_hit + 1;
+                   $display("Image %0d Prediction: %0d | Expected: %0d TRUE", i, prediction, test_labels[i]);
+               end else begin
+                   $display("Image %0d Prediction: %0d | Expected: %0d FALSE", i, prediction, test_labels[i]);
+               end
 
-//                state <= 1'b0;
-//                i <= i + 1'b1;
-//            end
+               state <= 1'b0;
+               i <= i + 1'b1;
+           end
 
-//            if (state == 1'b0) begin
-//                data_in <= test_img_set[i * 784 + img_idx]; // Stream the first image
-//                valid_in <= 1'b1;
-//                img_idx <= img_idx + 1;
+           if (state == 1'b0) begin
+            //    data_in = test_img_set[i * 784 + img_idx]; // Stream the first image
+               data_in <= test_img_1[i * 784 + img_idx]; // stream for test
+               valid_in <= 1'b1;
+               img_idx <= img_idx + 1;
 
-//                if (img_idx >= 784) begin
-//                    img_idx <= 0; // Reset pixel index for the next image
-//                    state <= 1'b1; // Set state to indicate image is fully sent
-//                    valid_in <= 1'b1;
+               if (img_idx >= 784) begin
+                   img_idx <= 0; // Reset pixel index for the next image
+                   state <= 1'b1; // Set state to indicate image is fully sent
+                   valid_in <= 1'b0;
 
-//                    if (i >= 1000) begin
-//                        // display final results
-//                        data_in = 0; // Stop sending data
-//                        valid_in = 1'b0; 
-//                        accuracy = (prediction_hit * 100) / 1000; // Calculate accuracy
-//                        $display("=== Test Completed ===");
-//                        $display("Total Images: 1000, Correct Predictions: %0d, Accuracy: %0d%%", prediction_hit, accuracy);
-//                        $finish;
-//                    end
-//                end
-//            end
-//        end
-//    end
+                //    if (i >= 1000) begin
+                   if (i >= 2) begin
+                       // display final results
+                       data_in = 0; // Stop sending data
+                       valid_in = 1'b0; 
+                       accuracy = (prediction_hit * 100) / 1000; // Calculate accuracy
+                       $display("=== Test Completed ===");
+                       $display("Total Images: 1000, Correct Predictions: %0d, Accuracy: %0d%%", prediction_hit, accuracy);
+                       $finish;
+                   end
+               end
+           end
+       end
+   end
 
     // always @(posedge clk) begin
     //     if (!rst_n) begin
