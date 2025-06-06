@@ -16,21 +16,21 @@ def read_labels(path):
         return labels
 
 # Read and process the first 10 test samples
-images = read_images("t10k-images.idx3-ubyte")[:10]
-labels = read_labels("t10k-labels.idx1-ubyte")[:10]
+images = read_images("t10k-images.idx3-ubyte")[:1000]
+labels = read_labels("t10k-labels.idx1-ubyte")[:1000]
 
 # Binarize (threshold at 128)
 images_bin = (images > 128).astype(np.uint8)
 
 # Save to .mem for Verilog
-with open("mnist_test_10.mem", "w") as f:
+with open("mnist_test_1000.mem", "w") as f:
     for img in images_bin:
         for bit in img:
             f.write(f"{bit}\n")
 
 # Save labels
-with open("mnist_test_10_labels.mem", "w") as f:
+with open("mnist_test_1000_labels.mem", "w") as f:
     for label in labels:
         f.write(f"{label}\n")
 
-print("✅ Generated: mnist_test_10.mem and mnist_test_10_labels.mem")
+print("✅ Generated: mnist_test_1000.mem and mnist_test_1000_labels.mem")
