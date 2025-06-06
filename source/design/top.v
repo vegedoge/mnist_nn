@@ -2,6 +2,7 @@ module top (
     input wire clk,
     input wire rst_n,
     input wire data_in,             // stream input of data bits
+    input wire valid_in,
     output wire [3:0] prediction,   // 4 bit for 0-9
     output wire [7:0] confidence,   // 8 bit for confidence percentage
     output wire valid_out
@@ -45,6 +46,7 @@ conv_layer_1 conv_layer_1_inst (
     .clk(clk),
     .rst_n(rst_n),
     .pixel_in(data_in),
+    .valid_in(valid_in),
     .conv1_out_1(conv1_out_1),
     .conv1_out_2(conv1_out_2),
     .conv1_out_3(conv1_out_3),

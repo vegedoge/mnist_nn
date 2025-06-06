@@ -16,14 +16,14 @@ module conv1_calc_1(
     reg w5 [0:WINDOW_SIZE-1]; reg w6 [0:WINDOW_SIZE-1]; reg w7 [0:WINDOW_SIZE-1]; reg w8 [0:WINDOW_SIZE-1];
     initial begin
         // read the weight from txt file
-        $readmemb("../../../../../source/design/weights/weight_ch1.txt", w1);
-        $readmemb("../../../../../source/design/weights/weight_ch2.txt", w2);
-        $readmemb("../../../../../source/design/weights/weight_ch3.txt", w3);
-        $readmemb("../../../../../source/design/weights/weight_ch4.txt", w4);
-        $readmemb("../../../../../source/design/weights/weight_ch5.txt", w5);
-        $readmemb("../../../../../source/design/weights/weight_ch6.txt", w6);
-        $readmemb("../../../../../source/design/weights/weight_ch7.txt", w7);
-        $readmemb("../../../../../source/design/weights/weight_ch8.txt", w8);
+        $readmemb("../../../../../source/design/weights/conv1/weight_ch1.txt", w1);
+        $readmemb("../../../../../source/design/weights/conv1/weight_ch2.txt", w2);
+        $readmemb("../../../../../source/design/weights/conv1/weight_ch3.txt", w3);
+        $readmemb("../../../../../source/design/weights/conv1/weight_ch4.txt", w4);
+        $readmemb("../../../../../source/design/weights/conv1/weight_ch5.txt", w5);
+        $readmemb("../../../../../source/design/weights/conv1/weight_ch6.txt", w6);
+        $readmemb("../../../../../source/design/weights/conv1/weight_ch7.txt", w7);
+        $readmemb("../../../../../source/design/weights/conv1/weight_ch8.txt", w8);
     end
     
     // concatenate all the values into a 9-bit vector

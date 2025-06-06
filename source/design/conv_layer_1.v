@@ -2,6 +2,7 @@ module conv_layer_1(
     input wire clk,
     input wire rst_n,
     input wire pixel_in,         // 1-bit input data
+    input wire valid_in, // valid signal
     output conv1_out_1,     // 8 channels output signals for convolution layer 1
     output conv1_out_2,     // each clk one bit output
     output conv1_out_3,
@@ -27,7 +28,7 @@ conv1_buf #(
 ) conv1_buf_inst (
     .clk(clk),
     .rst_n(rst_n),
-    .valid_in(1'b1), // always valid in this case
+    .valid_in(valid_in), // always valid in this case
     .pixel_in(pixel_in),
     .pixel_0(pixel_0),
     .pixel_1(pixel_1),
