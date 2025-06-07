@@ -99,17 +99,17 @@ module top_tb_batch();
     //         end
     //     end
     // end
-    integer j, k;
-    initial begin
-        for (j = 0; j < 2; j = j + 1) begin
-            for (k = 0; k < 784; k = k + 1) begin
-                test_img_1[j * 784 + k] = 1;
-            end
-        end
+//    integer j, k;
+//    initial begin
+//        for (j = 0; j < 2; j = j + 1) begin
+//            for (k = 0; k < 784; k = k + 1) begin
+//                test_img_1[j * 784 + k] = 1;
+//            end
+//        end
 
-        test_labels_1[0] = 4'b0001; // Label for first image
-        test_labels_1[1] = 4'b0001; // Label for second image
-    end
+//        test_labels_1[0] = 4'b0001; // Label for first image
+//        test_labels_1[1] = 4'b0001; // Label for second image
+//    end
 
    always @(posedge clk) begin
        if (!rst_n) begin
