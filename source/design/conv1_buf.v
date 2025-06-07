@@ -85,17 +85,17 @@ module conv1_buf #(
     //                pixel_6 <= 0; pixel_7 <= 0; pixel_8 <= 0; 
                 end
                 
-                if (valid_d) begin
-                    valid_out_buf <= 1'b1;
-                    pixel_0 <= window[0][0]; pixel_1 <= window[0][1]; pixel_2 <= window[0][2];
-                    pixel_3 <= window[1][0]; pixel_4 <= window[1][1]; pixel_5 <= window[1][2];
-                    pixel_6 <= window[2][0]; pixel_7 <= window[2][1]; pixel_8 <= window[2][2];            
-                end else begin
-                    valid_out_buf <= 1'b0;
-                    pixel_0 <= 0; pixel_1 <= 0; pixel_2 <= 0; 
-                    pixel_3 <= 0; pixel_4 <= 0; pixel_5 <= 0; 
-                    pixel_6 <= 0; pixel_7 <= 0; pixel_8 <= 0; 
-                end
+//                if (valid_d) begin
+//                    valid_out_buf <= 1'b1;
+//                    pixel_0 <= window[0][0]; pixel_1 <= window[0][1]; pixel_2 <= window[0][2];
+//                    pixel_3 <= window[1][0]; pixel_4 <= window[1][1]; pixel_5 <= window[1][2];
+//                    pixel_6 <= window[2][0]; pixel_7 <= window[2][1]; pixel_8 <= window[2][2];            
+//                end else begin
+//                    valid_out_buf <= 1'b0;
+//                    pixel_0 <= 0; pixel_1 <= 0; pixel_2 <= 0; 
+//                    pixel_3 <= 0; pixel_4 <= 0; pixel_5 <= 0; 
+//                    pixel_6 <= 0; pixel_7 <= 0; pixel_8 <= 0; 
+//                end
                 
                 if (x == WIDTH - 1) begin
                     // achieve the border, reset x, y
@@ -119,6 +119,19 @@ module conv1_buf #(
                 pixel_3 <= 0; pixel_4 <= 0; pixel_5 <= 0; 
                 pixel_6 <= 0; pixel_7 <= 0; pixel_8 <= 0; 
             end
+            
+            if (valid_d) begin
+                valid_out_buf <= 1'b1;
+                pixel_0 <= window[0][0]; pixel_1 <= window[0][1]; pixel_2 <= window[0][2];
+                pixel_3 <= window[1][0]; pixel_4 <= window[1][1]; pixel_5 <= window[1][2];
+                pixel_6 <= window[2][0]; pixel_7 <= window[2][1]; pixel_8 <= window[2][2];            
+            end else begin
+                valid_out_buf <= 1'b0;
+                pixel_0 <= 0; pixel_1 <= 0; pixel_2 <= 0; 
+                pixel_3 <= 0; pixel_4 <= 0; pixel_5 <= 0; 
+                pixel_6 <= 0; pixel_7 <= 0; pixel_8 <= 0; 
+            end
+            
         end
     end 
     

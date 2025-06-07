@@ -76,16 +76,16 @@ module max_pooling_buf #(
                     ready_for_pooling <= 1'b0;
                 end
 
-                if (ready_for_pooling) begin
-                    // buffer is valid only if y >= 1 && x >= 1
-                    valid_out_buf <= 1'b1;
-                    pixel_0 <= window[0][0]; pixel_1 <= window[0][1];
-                    pixel_2 <= window[1][0]; pixel_3 <= window[1][1];
-                end else begin
-                    valid_out_buf <= 1'b0;
-                    pixel_0 <= 0; pixel_1 <= 0;
-                    pixel_2 <= 0; pixel_3 <= 0;
-                end
+//                if (ready_for_pooling) begin
+//                    // buffer is valid only if y >= 1 && x >= 1
+//                    valid_out_buf <= 1'b1;
+//                    pixel_0 <= window[0][0]; pixel_1 <= window[0][1];
+//                    pixel_2 <= window[1][0]; pixel_3 <= window[1][1];
+//                end else begin
+//                    valid_out_buf <= 1'b0;
+//                    pixel_0 <= 0; pixel_1 <= 0;
+//                    pixel_2 <= 0; pixel_3 <= 0;
+//                end
                 
                 // can be updated here, now it's slo cuz the stride is 1
                 if (x == WIDTH - 1) begin
@@ -110,6 +110,18 @@ module max_pooling_buf #(
                 pixel_0 <= 0; pixel_1 <= 0;
                 pixel_2 <= 0; pixel_3 <= 0;
             end
+            
+            if (ready_for_pooling) begin
+                // buffer is valid only if y >= 1 && x >= 1
+                valid_out_buf <= 1'b1;
+                pixel_0 <= window[0][0]; pixel_1 <= window[0][1];
+                pixel_2 <= window[1][0]; pixel_3 <= window[1][1];
+            end else begin
+                valid_out_buf <= 1'b0;
+                pixel_0 <= 0; pixel_1 <= 0;
+                pixel_2 <= 0; pixel_3 <= 0;
+            end
+            
         end
     end
 
