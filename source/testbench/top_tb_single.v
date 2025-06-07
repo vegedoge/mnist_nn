@@ -28,7 +28,7 @@ module top_single_tb();
     end
 
     initial begin
-        $readmemb("../../../../../source/testbench/test_figures/test_7_7.txt", test_img);
+        $readmemb("../../../../../source/testbench/test_figures/test_0.txt", test_img);
         rst_n = 0;
         data_in = 0;
         valid_in = 0;
