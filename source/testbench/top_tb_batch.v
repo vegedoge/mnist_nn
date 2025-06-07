@@ -120,31 +120,32 @@ module top_tb_batch();
            i <= 0;
        end else begin
            if (valid_out) begin
-            //    if (prediction == test_labels[i]) begin
-               if (prediction == test_labels_1[i]) begin
+                if (prediction == test_labels[i]) begin
+//               if (prediction == test_labels_1[i]) begin
                    prediction_hit <= prediction_hit + 1;
                    $display("Image %0d Prediction: %0d | Expected: %0d TRUE", i, prediction, test_labels[i]);
                end else begin
                    $display("Image %0d Prediction: %0d | Expected: %0d FALSE", i, prediction, test_labels[i]);
                end
 
-               state <= 1'b0;
-               i <= i + 1'b1;
+//               state <= 1'b0;
+//               i <= i + 1'b1;
            end
 
            if (state == 1'b0) begin
-            //    data_in = test_img_set[i * 784 + img_idx]; // Stream the first image
-               data_in <= test_img_1[i * 784 + img_idx]; // stream for test
+                data_in = test_img_set[i * 784 + img_idx]; // Stream the first image
+//               data_in <= test_img_1[i * 784 + img_idx]; // stream for test
                valid_in <= 1'b1;
                img_idx <= img_idx + 1;
 
-               if (img_idx >= 784) begin
+               if (img_idx >= 784 - 1) begin
                    img_idx <= 0; // Reset pixel index for the next image
-                   state <= 1'b1; // Set state to indicate image is fully sent
+                   i <= i + 1'b1;
+//                   state <= 1'b1; // Set state to indicate image is fully sent
                    valid_in <= 1'b0;
 
-                //    if (i >= 1000) begin
-                   if (i >= 2) begin
+                    if (i >= 1000 - 1) begin
+//                   if (i >= 2 - 1) begin
                        // display final results
                        data_in = 0; // Stop sending data
                        valid_in = 1'b0; 
