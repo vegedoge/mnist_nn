@@ -34,6 +34,7 @@ module conv1_buf #(
             y <= 0;
             buf_cnt <= 0;
             valid_out_buf <= 1'b0;
+            valid_d <= 1'b0;
             pixel_0 <= 0; pixel_1 <= 0; pixel_2 <= 0; 
             pixel_3 <= 0; pixel_4 <= 0; pixel_5 <= 0; 
             pixel_6 <= 0; pixel_7 <= 0; pixel_8 <= 0;
@@ -113,6 +114,7 @@ module conv1_buf #(
             end else begin
                 // if valid_in is low, reset the output
                 valid_out_buf <= 1'b0;
+                valid_d <= 1'b0; // rst
                 pixel_0 <= 0; pixel_1 <= 0; pixel_2 <= 0; 
                 pixel_3 <= 0; pixel_4 <= 0; pixel_5 <= 0; 
                 pixel_6 <= 0; pixel_7 <= 0; pixel_8 <= 0; 

@@ -33,6 +33,7 @@ module max_pooling_buf #(
             y <= 0;
             buf_cnt <= 0;
             valid_out_buf <= 1'b0;
+            ready_for_pooling <= 1'b0; // rst
             pixel_0 <= 0; pixel_1 <= 0;
             pixel_2 <= 0; pixel_3 <= 0;
 
@@ -105,6 +106,7 @@ module max_pooling_buf #(
             end else begin
                 // if valid_in is low, reset the output
                 valid_out_buf <= 1'b0;
+                ready_for_pooling <= 1'b0; // rst the state
                 pixel_0 <= 0; pixel_1 <= 0;
                 pixel_2 <= 0; pixel_3 <= 0;
             end

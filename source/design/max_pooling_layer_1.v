@@ -60,8 +60,8 @@ generate
         );
 
         max_pooling_calc max_pooling_calc_inst (
-            .clk(clk),
-            .rst_n(rst_n),
+//            .clk(clk),
+//            .rst_n(rst_n),
             .valid_out_buf(valid_out_buf[i]),
             .pixel_0(pixel_0[i]),
             .pixel_1(pixel_1[i]),
