@@ -1,13 +1,13 @@
 module top_tb_batch();
     reg clk;
     reg rst_n;
-    reg data_in;
+    reg [7:0] data_in;
     reg valid_in;
     wire [3:0] prediction;
     wire [7:0] confidence;
     wire valid_out;
 
-    reg test_img_set [0:783999];
+    reg [7:0] test_img_set [0:783999];
     reg [0:3] test_labels [0:999]; // 1000 labels, each 4 bits
 
     reg [9:0] img_idx;  // pixel index in one image
@@ -38,8 +38,8 @@ module top_tb_batch();
 
     // load test set
     initial begin
-        $readmemb("../../../../../source/testbench/test_figures/mnist_test_1000.mem", test_img_set);
-        $readmemh("../../../../../source/testbench/test_figures/mnist_test_1000_labels.mem", test_labels);
+        $readmemh("../../../../../source/testbench/test_figures/test_1000_hex.txt", test_img_set);
+        $readmemh("../../../../../source/testbench/test_figures/test_1000_hex_labels.txt", test_labels);
         rst_n = 0;
         data_in = 0;
         valid_in = 0;
@@ -133,7 +133,7 @@ module top_tb_batch();
            end
 
            if (state == 1'b0) begin
-                data_in = test_img_set[i * 784 + img_idx]; // Stream the first image
+               data_in <= test_img_set[i * 784 + img_idx]; // Stream the first image
 //               data_in <= test_img_1[i * 784 + img_idx]; // stream for test
                valid_in <= 1'b1;
                img_idx <= img_idx + 1;

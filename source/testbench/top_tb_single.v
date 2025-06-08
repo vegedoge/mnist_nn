@@ -1,13 +1,13 @@
 module top_single_tb();
     reg clk;
     reg rst_n;
-    reg data_in;
+    reg [7:0] data_in;
     reg valid_in;
     wire [3:0] prediction;
     wire [7:0] confidence;
     wire valid_out;
 
-    reg test_img [0:783];   // memory array
+    reg [7:0] test_img [0:783];   // memory array
     reg [9:0] img_idx;
 
     // Instantiate the top module
@@ -28,7 +28,7 @@ module top_single_tb();
     end
 
     initial begin
-        $readmemb("../../../../../source/testbench/test_figures/test_0.txt", test_img);
+        $readmemh("../../../../../source/testbench/test_figures/test_1_hex.txt", test_img);
         rst_n = 0;
         data_in = 0;
         valid_in = 0;

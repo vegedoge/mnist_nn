@@ -1,7 +1,7 @@
 module top (
     input wire clk,
     input wire rst_n,
-    input wire data_in,             // stream input of data bits
+    input wire [7:0] data_in,             // stream input of data bits
     input wire valid_in,
     output wire [3:0] prediction,   // 4 bit for 0-9
     output wire [7:0] confidence,   // 8 bit for confidence percentage
