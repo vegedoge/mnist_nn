@@ -1,15 +1,39 @@
+#!/usr/bin/env python3
+"""
+main_bnn_mnist.py
+
+Trains a binary neural network on MNIST using optional hyperparameter optimization.
+
+Run without HPO:
+    python3 main_bnn_mnist.py
+
+Run with hyperparameter optimization:
+    python3 main_bnn_mnist.py --search
+
+Add --plot to visualize correct and incorrect predictions.
+Add --dump to export model weights and test images in hex.
+"""
+
+
+# ----------------------------
+# 1) Imports and Setup
+# ----------------------------
+import os
+import argparse
+import time
+import random
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import datasets, transforms
-from torch.utils.data import DataLoader
-import os
+from torch.utils.data import DataLoader, random_split
+import matplotlib.pyplot as plt
+import numpy as np
 
-# # Binarization function with Straight-Through Estimator
-# def Binarize(input):
-#     return input.sign()
-
+# ----------------------------
+# 2) Binary Layers and Model
+# ----------------------------
 class BinarizeF(torch.autograd.Function):
     @staticmethod
     def forward(ctx, input):
@@ -81,8 +105,12 @@ class BNN(nn.Module):
         x = self.fc(x)
         return x
 
-# Training and Evaluation
 
+
+
+# ----------------------------
+# 3) Training and Evaluation
+# ----------------------------
 def train(model, device, train_loader, optimizer, epoch):
     model.train()
     criterion = nn.CrossEntropyLoss()
@@ -118,6 +146,9 @@ def test(model, device, test_loader):
     return test_loss, accuracy
 
 
+# ----------------------------
+# 4) Dumping Functions
+# ----------------------------
 def dump_weights(model, out_dir="weights"):
     os.makedirs(out_dir, exist_ok=True)
     # Conv1
@@ -144,6 +175,7 @@ def dump_weights(model, out_dir="weights"):
                 f.write(f"{1 if val>0 else 0}\n")
     print(f"Weights dumped to '{out_dir}/'")
 
+
 def dump_test_images_hex_linewise(test_loader, img_file="test_images_hex.txt", label_file="test_labels.txt"):
     with open(img_file, 'w') as img_f, open(label_file, 'w') as lbl_f:
         for data, targets in test_loader:
@@ -156,30 +188,127 @@ def dump_test_images_hex_linewise(test_loader, img_file="test_images_hex.txt", l
                 lbl_f.write(f"{label.item()}\n")
     print(f"Images dumped to '{img_file}', labels to '{label_file}'")
 
+# ----------------------------
+# 5) Hyperparameter Search
+# ----------------------------
+def hyperparam_search(device, train_set, val_set):
+    from itertools import product
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    best_acc, best_cfg = 0, (64, 'Adam', 0.001)
+    configs = list(product([32, 64, 128], ['SGD', 'Adam'], [1e-4, 1e-3, 1e-2]))
 
-transform = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Lambda(lambda x: x * 255.0),
-    # transforms.Normalize((0.1307,), (0.3081,)),
-    # transforms.Lambda(lambda x: torch.sign(x))
-])
+    for bs, opt, lr in configs:
+        print(f"Testing config: BS={bs}, OPT={opt}, LR={lr}")
+        model = BNN().to(device)
 
-train_dataset = datasets.MNIST('./data', train=True, download=True, transform=transform)
-test_dataset = datasets.MNIST('./data', train=False, transform=transform)
-train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=1000, shuffle=False)
+        if opt == 'SGD':
+            optimizer = optim.SGD(model.parameters(), lr=lr)
+        else:
+            optimizer = optim.Adam(model.parameters(), lr=lr)
 
-model = BNN().to(device)
-optimizer = optim.Adam(model.parameters(), lr=0.001)
+        train_loader = DataLoader(train_set, batch_size=bs, shuffle=True)
+        val_loader = DataLoader(val_set, batch_size=bs)
 
-epochs = 5
-for epoch in range(1, epochs + 1):
-    train(model, device, train_loader, optimizer, epoch)
-    test(model, device, test_loader)
+        # Train for 5 epochs
+        for epoch in range(1, 6):
+            train(model, device, train_loader, optimizer, epoch)
 
-torch.save(model.state_dict(), 'bnn_selective.pth')
-print('Model saved as bnn_selective.pth')
-dump_weights(model)
-# dump_test_images_hex_linewise(test_loader)
+        # Evaluate on validation set
+        _, acc = test(model, device, val_loader)
+
+        if acc > best_acc:
+            best_acc = acc
+            best_cfg = (bs, opt, lr)
+            print(f"New best config: {best_cfg} -> {best_acc:.2f}%")
+
+    return best_cfg
+
+
+# ----------------------------
+# 6) Visualization
+# ----------------------------
+def plot_predictions(model, test_loader, device):
+    correct, wrong = [], []
+    model.eval()
+    with torch.no_grad():
+        for data, target in test_loader:
+            data, target = data.to(device), target.to(device)
+            output = model(data)
+            preds = output.argmax(1)
+            for img, pred, label in zip(data, preds, target):
+                (correct if pred == label else wrong).append((img.cpu(), pred.item(), label.item()))
+                if len(correct) >= 3 and len(wrong) >= 2:
+                    break
+            if len(correct) >= 3 and len(wrong) >= 2:
+                break
+
+    fig, axs = plt.subplots(1, 5, figsize=(12, 3))
+    for ax, (img, pred, label) in zip(axs, correct + wrong):
+        ax.imshow(img.squeeze(), cmap='gray')
+        ax.set_title(f"Pred: {pred}\nTrue: {label}")
+        ax.axis('off')
+    plt.tight_layout()
+    plt.show()
+
+
+# ----------------------------
+# 7) Main
+# ----------------------------
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--search', action='store_true', help="Enable hyperparameter search")
+    parser.add_argument('--plot', action='store_true', help="Plot example predictions")
+    parser.add_argument('--dump', action='store_true', help="Dump weights and images")
+    args = parser.parse_args()
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Lambda(lambda x: x * 255.0),
+    ])
+
+    train_dataset = datasets.MNIST('./data', train=True, download=True, transform=transform)
+    test_dataset = datasets.MNIST('./data', train=False, transform=transform)
+    train_size = int(0.9 * len(train_dataset))
+    val_size = len(train_dataset) - train_size
+    train_set, val_set = random_split(train_dataset, [train_size, val_size])
+
+    if args.search:
+        bs, opt_name, lr = hyperparam_search(device, train_set, val_set)
+    else:
+        bs, opt_name, lr = 128, 'Adam', 0.001
+
+    print(f"Using config: BS={bs}, OPT={opt_name}, LR={lr}")
+    # train_val_set = torch.utils.data.ConcatDataset([train_set, val_set])
+    train_loader = DataLoader(train_set, batch_size=bs, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=1000, shuffle=False)
+
+    # train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+    # test_loader = DataLoader(test_dataset, batch_size=1000, shuffle=False)
+
+    model = BNN().to(device)
+    optimizer = getattr(optim, opt_name)(model.parameters(), lr=lr)
+    # optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+    # criterion = nn.CrossEntropyLoss()
+
+    epochs = 10
+    for epoch in range(1, epochs + 1):
+        train(model, device, train_loader, optimizer, epoch)
+        test(model, device, test_loader)
+
+    torch.save(model.state_dict(), "bnn_model.pth")
+    print("Model saved as bnn_model.pth")
+
+    dump_weights(model)
+
+    if args.dump:
+        dump_test_images_hex_linewise(test_loader)
+
+    if args.plot:
+        plot_predictions(model, test_loader, device)
+
+
+if __name__ == "__main__":
+    main()
