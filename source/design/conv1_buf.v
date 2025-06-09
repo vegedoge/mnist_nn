@@ -106,7 +106,7 @@ module conv1_buf #(
                         y <= y + 1;
                     end
                     buf_cnt <= buf_cnt + 1;
-                    if (buf_cnt >= KERNEL_SIZE) buf_cnt <= 0; // (buf_cnt + 1) % 3
+                    if (buf_cnt >= KERNEL_SIZE - 1) buf_cnt <= 0; // (buf_cnt + 1) % 3
                 
                 end else begin
                     x <= x + 1;

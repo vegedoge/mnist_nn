@@ -114,22 +114,22 @@ module conv2_calc_2 (
     
     always @(*) begin
         if (valid_in_buf) begin
-            conv2_out[0] = (cnt1 >= THRESH) ? 1'b1 : 1'b0;
-            conv2_out[1] = (cnt2 >= THRESH) ? 1'b1 : 1'b0;
-            conv2_out[2] = (cnt3 >= THRESH) ? 1'b1 : 1'b0;
-            conv2_out[3] = (cnt4 >= THRESH) ? 1'b1 : 1'b0;
-            conv2_out[4] = (cnt5 >= THRESH) ? 1'b1 : 1'b0;
-            conv2_out[5] = (cnt6 >= THRESH) ? 1'b1 : 1'b0;
-            conv2_out[6] = (cnt7 >= THRESH) ? 1'b1 : 1'b0;
-            conv2_out[7] = (cnt8 >= THRESH) ? 1'b1 : 1'b0;
-            conv2_out[8] = (cnt9 >= THRESH) ? 1'b1 : 1'b0;
-            conv2_out[9] = (cnt10 >= THRESH) ? 1'b1 : 1'b0;
-            conv2_out[10] = (cnt11 >= THRESH) ? 1'b1 : 1'b0;
-            conv2_out[11] = (cnt12 >= THRESH) ? 1'b1 : 1'b0;
-            conv2_out[12] = (cnt13 >= THRESH) ? 1'b1 : 1'b0;
-            conv2_out[13] = (cnt14 >= THRESH) ? 1'b1 : 1'b0;
-            conv2_out[14] = (cnt15 >= THRESH) ? 1'b1 : 1'b0;
-            conv2_out[15] = (cnt16 >= THRESH) ? 1'b1 : 1'b0;
+            conv2_out[0] = (cnt1 > THRESH) ? 1'b1 : 1'b0;
+            conv2_out[1] = (cnt2 > THRESH) ? 1'b1 : 1'b0;
+            conv2_out[2] = (cnt3 > THRESH) ? 1'b1 : 1'b0;
+            conv2_out[3] = (cnt4 > THRESH) ? 1'b1 : 1'b0;
+            conv2_out[4] = (cnt5 > THRESH) ? 1'b1 : 1'b0;
+            conv2_out[5] = (cnt6 > THRESH) ? 1'b1 : 1'b0;
+            conv2_out[6] = (cnt7 > THRESH) ? 1'b1 : 1'b0;
+            conv2_out[7] = (cnt8 > THRESH) ? 1'b1 : 1'b0;
+            conv2_out[8] = (cnt9 > THRESH) ? 1'b1 : 1'b0;
+            conv2_out[9] = (cnt10 > THRESH) ? 1'b1 : 1'b0;
+            conv2_out[10] = (cnt11 > THRESH) ? 1'b1 : 1'b0;
+            conv2_out[11] = (cnt12 > THRESH) ? 1'b1 : 1'b0;
+            conv2_out[12] = (cnt13 > THRESH) ? 1'b1 : 1'b0;
+            conv2_out[13] = (cnt14 > THRESH) ? 1'b1 : 1'b0;
+            conv2_out[14] = (cnt15 > THRESH) ? 1'b1 : 1'b0;
+            conv2_out[15] = (cnt16 > THRESH) ? 1'b1 : 1'b0;
             valid_out_conv2 = 1'b1;
         end else begin
             conv2_out = 16'b0;

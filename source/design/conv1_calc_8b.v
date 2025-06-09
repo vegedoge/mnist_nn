@@ -10,7 +10,7 @@ module conv1_calc_8b(
     localparam KERNEL_SIZE = 3; // 3x3 filter size
     localparam WINDOW_SIZE = 9;
 //    localparam [6:0] THRESH = 7'd5;
-    localparam signed [11:0] THRESH = 11'sd0;
+    localparam signed [11:0] THRESH = 12'sd0;
         
     reg w1 [0:WINDOW_SIZE-1]; reg w2 [0:WINDOW_SIZE-1]; reg w3 [0:WINDOW_SIZE-1]; reg w4 [0:WINDOW_SIZE-1]; 
     reg w5 [0:WINDOW_SIZE-1]; reg w6 [0:WINDOW_SIZE-1]; reg w7 [0:WINDOW_SIZE-1]; reg w8 [0:WINDOW_SIZE-1];
@@ -76,14 +76,14 @@ module conv1_calc_8b(
     
     always @(*) begin
         if (valid_in_buf) begin
-            conv1_out_1 = (sum1 >= THRESH) ? 1'b1 : 1'b0;
-            conv1_out_2 = (sum2 >= THRESH) ? 1'b1 : 1'b0;
-            conv1_out_3 = (sum3 >= THRESH) ? 1'b1 : 1'b0;
-            conv1_out_4 = (sum4 >= THRESH) ? 1'b1 : 1'b0;
-            conv1_out_5 = (sum5 >= THRESH) ? 1'b1 : 1'b0;
-            conv1_out_6 = (sum6 >= THRESH) ? 1'b1 : 1'b0;
-            conv1_out_7 = (sum7 >= THRESH) ? 1'b1 : 1'b0;
-            conv1_out_8 = (sum8 >= THRESH) ? 1'b1 : 1'b0;
+            conv1_out_1 = (sum1 > THRESH) ? 1'b1 : 1'b0;
+            conv1_out_2 = (sum2 > THRESH) ? 1'b1 : 1'b0;
+            conv1_out_3 = (sum3 > THRESH) ? 1'b1 : 1'b0;
+            conv1_out_4 = (sum4 > THRESH) ? 1'b1 : 1'b0;
+            conv1_out_5 = (sum5 > THRESH) ? 1'b1 : 1'b0;
+            conv1_out_6 = (sum6 > THRESH) ? 1'b1 : 1'b0;
+            conv1_out_7 = (sum7 > THRESH) ? 1'b1 : 1'b0;
+            conv1_out_8 = (sum8 > THRESH) ? 1'b1 : 1'b0;
             valid_out_conv1 = 1'b1;
         end else begin
             conv1_out_1 = 1'b0;

@@ -28,7 +28,7 @@ module top_single_tb();
     end
 
     initial begin
-        $readmemh("../../../../../source/testbench/test_figures/test_1_hex.txt", test_img);
+        $readmemh("../../../../../source/testbench/test_figures/test_9_hex.txt", test_img);
         rst_n = 0;
         data_in = 0;
         valid_in = 0;

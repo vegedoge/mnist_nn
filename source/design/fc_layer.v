@@ -33,16 +33,16 @@ module fc_layer #(
     
     integer i, j;
     initial begin
-        $readmemb("../../../../../source/design/weights/fc/weight_1.txt",  w1);
-        $readmemb("../../../../../source/design/weights/fc/weight_2.txt",  w2);
-        $readmemb("../../../../../source/design/weights/fc/weight_3.txt",  w3);
-        $readmemb("../../../../../source/design/weights/fc/weight_4.txt",  w4);
-        $readmemb("../../../../../source/design/weights/fc/weight_5.txt",  w5);
-        $readmemb("../../../../../source/design/weights/fc/weight_6.txt",  w6);
-        $readmemb("../../../../../source/design/weights/fc/weight_7.txt",  w7);
-        $readmemb("../../../../../source/design/weights/fc/weight_8.txt",  w8);
-        $readmemb("../../../../../source/design/weights/fc/weight_9.txt",  w9);
-        $readmemb("../../../../../source/design/weights/fc/weight_10.txt",  w10);
+        $readmemb("../../../../../source/design/weights/fc/weight_ch1.txt",  w1);
+        $readmemb("../../../../../source/design/weights/fc/weight_ch2.txt",  w2);
+        $readmemb("../../../../../source/design/weights/fc/weight_ch3.txt",  w3);
+        $readmemb("../../../../../source/design/weights/fc/weight_ch4.txt",  w4);
+        $readmemb("../../../../../source/design/weights/fc/weight_ch5.txt",  w5);
+        $readmemb("../../../../../source/design/weights/fc/weight_ch6.txt",  w6);
+        $readmemb("../../../../../source/design/weights/fc/weight_ch7.txt",  w7);
+        $readmemb("../../../../../source/design/weights/fc/weight_ch8.txt",  w8);
+        $readmemb("../../../../../source/design/weights/fc/weight_ch9.txt",  w9);
+        $readmemb("../../../../../source/design/weights/fc/weight_ch10.txt",  w10);
     end
     
     function [8:0] popcount400;

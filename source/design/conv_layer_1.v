@@ -15,7 +15,7 @@ module conv_layer_1(
 );
 
 // input pixel buffer for 3x3 conv
-wire pixel_0, pixel_1, pixel_2,
+wire [7:0] pixel_0, pixel_1, pixel_2,
     pixel_3, pixel_4, pixel_5,
     pixel_6, pixel_7, pixel_8;
 

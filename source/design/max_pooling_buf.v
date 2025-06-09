@@ -96,7 +96,7 @@ module max_pooling_buf #(
                         y <= y + 1;
                     end
                     buf_cnt <= (buf_cnt + 1);
-                    if (buf_cnt >= KERNEL_SIZE) begin
+                    if (buf_cnt >= KERNEL_SIZE - 1) begin
                         buf_cnt <= 0; // reset buf_cnt if it exceeds KERNEL_SIZE
                     end
                     

@@ -142,7 +142,7 @@ module top_tb_batch();
                    img_idx <= 0; // Reset pixel index for the next image
                    i <= i + 1'b1;
 //                   state <= 1'b1; // Set state to indicate image is fully sent
-                   valid_in <= 1'b0;
+//                   valid_in <= 1'b0;
 
                     if (i >= 1000 - 1) begin
 //                   if (i >= 2 - 1) begin
