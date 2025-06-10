@@ -11,17 +11,16 @@ Run with hyperparameter optimization:
     python3 main_bnn_mnist.py --search
 
 Add --plot to visualize correct and incorrect predictions.
-Add --dump to export model weights and test images in hex.
+Add --dump to test images in hex.
 """
 
 
 # ----------------------------
 # 1) Imports and Setup
 # ----------------------------
+
 import os
 import argparse
-import time
-import random
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -29,7 +28,6 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, random_split
 import matplotlib.pyplot as plt
-import numpy as np
 
 # ----------------------------
 # 2) Binary Layers and Model
@@ -48,9 +46,7 @@ class BinaryConv2d(nn.Conv2d):
         super().__init__(*args, bias=False, **kwargs)
 
     def forward(self, input):
-        # binary_weight = self.weight.sign()
         binary_weight = BinarizeF.apply(self.weight)
-        # binary_input = input.sign()
         binary_input = BinarizeF.apply(input)
         return F.conv2d(binary_input, binary_weight, None, self.stride,
                         self.padding, self.dilation, self.groups)
@@ -60,7 +56,6 @@ class WeightBinaryConv2d(nn.Conv2d):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, bias=False, **kwargs)
     def forward(self, input):
-        # binary_weight = self.weight.sign()
         binary_weight = BinarizeF.apply(self.weight)
         return F.conv2d(input, binary_weight, None, self.stride,
                         self.padding, self.dilation, self.groups)
@@ -70,9 +65,7 @@ class BinaryLinear(nn.Linear):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, bias=False, **kwargs)
     def forward(self, input):
-        # binary_weight = self.weight.sign()
         binary_weight = BinarizeF.apply(self.weight)
-        # binary_input = input.sign()
         binary_input = BinarizeF.apply(input)
         return F.linear(binary_input, binary_weight, None)
 
@@ -92,11 +85,9 @@ class BNN(nn.Module):
     def forward(self, x):
         # Conv1: input real, weights binarized
         x = self.conv1(x)
-        # x = Binarize(x)
         x = BinarizeF.apply(x)
         x = self.pool1(x)
         # Binarize activation for next binary layer
-        # x = Binarize(x)
         # Conv2: binary weights and activations
         x = self.conv2(x)
         x = self.pool2(x)
@@ -104,8 +95,6 @@ class BNN(nn.Module):
         x = x.view(x.size(0), -1)
         x = self.fc(x)
         return x
-
-
 
 
 # ----------------------------
@@ -179,7 +168,6 @@ def dump_weights(model, out_dir="weights"):
 def dump_test_images_hex_linewise(test_loader, img_file="test_images_hex.txt", label_file="test_labels.txt"):
     with open(img_file, 'w') as img_f, open(label_file, 'w') as lbl_f:
         for data, targets in test_loader:
-            # imgs = data
             imgs = data.clamp(0, 255).to(torch.uint8)  # [0, 255]
             for img, label in zip(imgs, targets):
                 flat = img.view(-1).tolist()
@@ -280,18 +268,12 @@ def main():
         bs, opt_name, lr = 128, 'Adam', 0.001
 
     print(f"Using config: BS={bs}, OPT={opt_name}, LR={lr}")
-    # train_val_set = torch.utils.data.ConcatDataset([train_set, val_set])
     train_loader = DataLoader(train_set, batch_size=bs, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=1000, shuffle=False)
 
-    # train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-    # test_loader = DataLoader(test_dataset, batch_size=1000, shuffle=False)
 
     model = BNN().to(device)
     optimizer = getattr(optim, opt_name)(model.parameters(), lr=lr)
-    # optimizer = optim.Adam(model.parameters(), lr=0.001)
-
-    # criterion = nn.CrossEntropyLoss()
 
     epochs = 10
     for epoch in range(1, epochs + 1):
