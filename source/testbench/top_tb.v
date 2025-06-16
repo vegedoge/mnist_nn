@@ -3,7 +3,7 @@
 module top_tb;
 
 reg clk, rst_n;
-reg data_in;
+reg [7:0] data_in;
 wire [3:0] prediction;
 wire valid_out;
 
@@ -21,7 +21,7 @@ initial clk = 0;
 always #5 clk = ~clk;  // 100 MHz
 
 // Memory for input bits and labels
-reg [0:0] image_data [0:7840-1];
+reg [7:0] image_data [0:7840-1];
 reg [3:0] labels [0:9]; // 4 bits per label, 10 labels
 
 integer i;
